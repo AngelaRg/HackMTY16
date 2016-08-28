@@ -66,6 +66,14 @@ public class Player extends GameObject{
     public void setPlaying(boolean b){playing = b;}
     public void resetScore(){score = 0;}
 
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
     public int getLifes() {
         return lifes;
     }

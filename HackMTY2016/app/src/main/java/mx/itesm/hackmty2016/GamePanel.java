@@ -37,6 +37,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     private ArrayList<Heart> hearts;
     private ArrayList<Projectile> shots;
 
+    private boolean gameOver;
+
     public GamePanel(Context context) {
         super(context);
         //add the callback to the surfaceholder to intercept events
@@ -52,6 +54,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         mp.setLooping(true);
         mp.start();
 
+        gameOver = false;
     }
 
     @Override
@@ -105,7 +108,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        if(shots.size() <= 3) {
+        if(gameOver){
+            resetGame();
+        } else if(shots.size() <= 3) {
             float touchX = event.getX();
             float touchY = event.getY();
             float playerX = player.getVectorPosition().getX();
@@ -121,6 +126,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
         return super.onTouchEvent(event);
     }
+
+
 
     public void update() {
         if(player.getPlaying()) {
@@ -173,6 +180,32 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     public void endGame(){
         enemies.clear();
         player.setPlaying(false);
+        gameOver = true;
+    }
+
+    public void resetGame(){
+        gameOver = false;
+        // resetear player
+        player.setPlaying(true);
+        player.setLifes(2);
+        player.resetScore();
+        player.setStartTime(System.nanoTime());
+        player.getVectorPosition().setX(100);
+        // resetear listas
+        enemies = new ArrayList<Enemy>();
+        shots = new ArrayList<>();
+        for (int i=0; i < NUM_ENEMIES; i++) {
+            Bitmap enemyBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ghost);
+            enemy = new Enemy(enemyBitmap, enemyBitmap.getWidth()/3, enemyBitmap.getHeight(), 3);
+            enemies.add(enemy);
+        }
+
+        hearts = new ArrayList<Heart>();
+        for (int i = 1; i <= NUM_HEARTS; i++ ) {
+            Bitmap heartBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.heart);
+            heart = new Heart(heartBitmap, heartBitmap.getWidth(), heartBitmap.getHeight(), 1, i*100);
+            hearts.add(heart);
+        }
     }
 
     public boolean collision(GameObject a, GameObject b)
@@ -204,6 +237,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
             }
             for (Projectile shot: shots){
                 shot.draw(canvas);
+            }
+            if(gameOver){
+                Bitmap goBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.gameover2);
+                canvas.drawBitmap(goBitmap, 0, 0, null);
             }
             canvas.restoreToCount(savedState);
 
