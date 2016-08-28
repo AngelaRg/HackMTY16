@@ -15,14 +15,20 @@ public class Enemy extends GameObject{
 
     public Enemy(Bitmap res, int w, int h, int numFrames){
         this.vectorPosition = new Vector2D();
-        this.vectorPosition.setX(100);
+        Random rand = new Random();
+        int randomNum = rand.nextInt((GamePanel.WIDTH - 1) + 1) + 1;
+        this.vectorPosition.setX(randomNum);
+
         height = h;
         width = w;
-        Random rand = new Random();
-        int randomNum = rand.nextInt((5 - 2) + 1) + 2;
+
+        randomNum = rand.nextInt((5 - 2) + 1) + 2;
         speed = randomNum;
+
         // direccion en x,y
+        randomNum = rand.nextInt((1 - (-1)) + 1) - 1;
         dx = 1;
+        randomNum = rand.nextInt((1 - (-1)) + 1) - 1;
         dy = -1;
 
         this.vectorPosition.setY(height);
