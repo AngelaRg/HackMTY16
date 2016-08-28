@@ -92,7 +92,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (this.gamePanel.player !=null){
-            this.gamePanel.player.movePlayer((int)event.values[1]);
+            this.gamePanel.player.movePlayer(((int)event.values[1])*3);
         }
     }
 

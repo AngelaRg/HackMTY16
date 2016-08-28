@@ -9,19 +9,18 @@ import java.util.Random;
  * Created by hlg on 27/08/16.
  */
 public class Projectile extends GameObject {
-    float velocity;
+    float vX, vY;
     int height;
     int width;
-    float slope;
     private Bitmap spritesheet;
     private Animation animation = new Animation();
 
-    public Projectile (Bitmap res, int w, int h, float m, int numFrames, float initX, float initY, float vel) {
+    public Projectile (Bitmap res, int w, int h, int numFrames, float initX, float initY, float velX, float velY) {
         this.vectorPosition = new Vector2D(initX, initY);
         width = w;
         height = h;
-        slope = m;
-        velocity = vel;
+        vX = velX;
+        vY = velY;
         resetBitmap(res, numFrames);
     }
 
@@ -37,19 +36,12 @@ public class Projectile extends GameObject {
 
     public void update() {
         //Random rnum = new Random();
-        float adjustFactor = 0.1f;
-        if(slope > 0) {
-            vectorPosition.setX(vectorPosition.getX()-this.slope*velocity*adjustFactor);
-            vectorPosition.setY(vectorPosition.getY()-this.slope*velocity*adjustFactor);
-        } else {
-            vectorPosition.setX(vectorPosition.getX()-this.slope*velocity*adjustFactor);
-            vectorPosition.setY(vectorPosition.getY()+this.slope*velocity*adjustFactor);
-        }
+        float adjustFactor = 1.0f;
 
-    }
+        vectorPosition.setX(vectorPosition.getX()+vX);
+        vectorPosition.setY(vectorPosition.getY()-vY);
 
-    public void setSlope(float m) {
-        this.slope = m;
+
     }
 
     public void draw(Canvas canvas) {

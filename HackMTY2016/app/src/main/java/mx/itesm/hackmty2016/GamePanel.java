@@ -14,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.Vector;
@@ -25,8 +26,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 {
     public static int WIDTH = 856;
     public static int HEIGHT = 480;
-    public static final int NUM_ENEMIES = 6;
+    public static final int NUM_ENEMIES = 10;
     public static final int NUM_HEARTS = 2;
+    public static final int NUM_MISSILES = 2;
 
     private MainThread thread;
     private Background bg;
@@ -36,6 +38,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     private Heart heart;
     private ArrayList<Heart> hearts;
     private ArrayList<Projectile> shots;
+    private ArrayList<MiniMissile> missileCount;
 
     private boolean gameOver;
 
@@ -99,6 +102,13 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
             hearts.add(heart);
         }
 
+        missileCount = new ArrayList<>();
+        for(int i=1; i<=NUM_MISSILES; i++) {
+            Bitmap miniMissileBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.minimagic);
+            MiniMissile mm = new MiniMissile(miniMissileBitmap, miniMissileBitmap.getWidth(), miniMissileBitmap.getHeight(), 1, i*100);
+            missileCount.add(mm);
+        }
+
         thread = new MainThread(getHolder(), this);
         //we can safely start the game loop
         thread.setRunning(true);
@@ -110,18 +120,27 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
         if(gameOver){
             resetGame();
-        } else if(shots.size() <= 3) {
+        } else if(shots.size() < NUM_MISSILES) {
             float touchX = event.getX();
             float touchY = event.getY();
             float playerX = player.getVectorPosition().getX();
             float playerY = player.getVectorPosition().getY();
 
-            float vel = (float)Math.sqrt(Math.pow((touchX - playerX),2) + Math.pow((touchY - playerY), 2));
+            float distX = (float)Math.sqrt(Math.pow((touchX - playerX),2) + Math.pow((playerY - playerY), 2));
+            float distY = (float)Math.sqrt(Math.pow((playerX - playerX),2) + Math.pow((touchY - playerY), 2));
+            float velX = distX/30.0f;
+            float velY = distY/30.0f;
 
-            float slope = (touchY - playerY)/(touchX - playerX);
+            if(touchX-playerX < 0) {
+                velX = (-1.0f)*velX;
+            }
+
+            //float slope = (-1.0f)*Math.abs(touchY - playerY)/(touchX - playerX);
             Bitmap missile = BitmapFactory.decodeResource(getResources(), R.drawable.magic2);
-            Projectile shot = new Projectile(missile, missile.getWidth()/3, missile.getHeight(), slope, 3, playerX, playerY, vel);
+            Projectile shot = new Projectile(missile, missile.getWidth()/3, missile.getHeight(), 3, playerX, playerY, velX, velY);
             shots.add(shot);
+            if(missileCount.size()-1 >= 0)
+                missileCount.remove(missileCount.size()-1);
         }
 
         return super.onTouchEvent(event);
@@ -133,6 +152,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         if(player.getPlaying()) {
             bg.update();
             player.update();
+            Bitmap miniMissileBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.minimagic);
+            MiniMissile mm = new MiniMissile(miniMissileBitmap, miniMissileBitmap.getWidth(), miniMissileBitmap.getHeight(), 1, (missileCount.size()+1)*100);
             for (Enemy en: enemies){
                 en.update();
 
@@ -140,6 +161,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
                     if(collision(en, shot)) {
                         shots.remove(shot);
                         enemies.remove(en);
+                        missileCount.add(mm);
                         Bitmap enemyBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ghost);
                         enemy = new Enemy(enemyBitmap, enemyBitmap.getWidth()/3, enemyBitmap.getHeight(), 3);
                         enemies.add(enemy);
@@ -153,9 +175,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
                 if(x<0 || x>WIDTH) {
                     shots.remove(shot);
+                    missileCount.add(mm);
                 } else {
                     if (y<0 || y>HEIGHT) {
                         shots.remove(shot);
+                        missileCount.add(mm);
                     }
                 }
 
@@ -242,6 +266,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
             }
             for (Projectile shot: shots){
                 shot.draw(canvas);
+            }
+            if(!missileCount.isEmpty()) {
+                for (MiniMissile mm : missileCount) {
+                    mm.draw(canvas);
+                }
             }
             if(gameOver){
                 Bitmap goBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.gameover2);
