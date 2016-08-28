@@ -162,6 +162,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
             if (collision(en,player)){
                 enemies.remove(en);
                 player.setLifes(player.getLifes() - 1);
+                hearts.remove(hearts.size()-1);
                 if (player.getLifes() == 0){
                     endGame();
                 }
