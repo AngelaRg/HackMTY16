@@ -1,6 +1,7 @@
 package mx.itesm.hackmty2016;
 
 import android.content.pm.ActivityInfo;
+import android.graphics.BitmapFactory;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -20,7 +21,6 @@ import java.util.List;
 
 
 public class MainActivity extends Activity implements SensorEventListener {
-
     private Sensor mAccelerometer;
     private GamePanel gamePanel;
 
@@ -92,8 +92,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (this.gamePanel.player !=null){
-            this.gamePanel.player.vectorPosition.setX(this.gamePanel.player.vectorPosition.getX()
-                    + (int)event.values[1]);
+            this.gamePanel.player.movePlayer((int)event.values[1]);
         }
     }
 

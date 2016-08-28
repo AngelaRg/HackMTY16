@@ -7,11 +7,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.Typeface;
-import android.hardware.Sensor;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -21,12 +17,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 {
     public static final int WIDTH = 856;
     public static final int HEIGHT = 480;
-    public static final int MOVESPEED = -5;
     private MainThread thread;
     private Background bg;
     public Player player;
-
-    private Sensor mAccelerometer;
+    private Enemy enemy;
 
     public GamePanel(Context context) {
         super(context);
@@ -60,8 +54,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         Bitmap bgBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.graveyard1);
         bg = new Background(bgBitmap);
 
-        Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.wizard_right1);
+        Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.magician);
         player = new Player(playerBitmap, playerBitmap.getWidth()/4, playerBitmap.getHeight(), 4);
+
+        Bitmap enemyBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ghost);
+        enemy = new Enemy(enemyBitmap, enemyBitmap.getWidth()/3, enemyBitmap.getHeight(), 3);
 
         thread = new MainThread(getHolder(), this);
         //we can safely start the game loop
@@ -89,6 +86,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         if(player.getPlaying()) {
             bg.update();
             player.update();
+            enemy.update();
         }
 
     }
@@ -114,13 +112,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
             canvas.scale(scaleFactorX, scaleFactorY);
             bg.draw(canvas);
             player.draw(canvas);
+            enemy.draw(canvas);
             canvas.restoreToCount(savedState);
 
         }
     }
-
-
-
 
 
 

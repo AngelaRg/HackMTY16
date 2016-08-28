@@ -6,8 +6,6 @@ package mx.itesm.hackmty2016;
 import android.graphics.Rect;
 
 public abstract class GameObject {
-    //protected int x;
-    //protected int y;
     protected Vector2D vectorPosition;
     protected int dy;
     protected int dx;
