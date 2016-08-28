@@ -26,10 +26,10 @@ public class Enemy extends GameObject{
         speed = randomNum;
 
         // direccion en x,y
-        randomNum = rand.nextInt((1 - (-1)) + 1) - 1;
-        dx = 1;
-        randomNum = rand.nextInt((1 - (-1)) + 1) - 1;
-        dy = -1;
+        randomNum = rand.nextInt((10 - 1) + 1) + 1;
+        dx = (int)Math.pow(-1.0, (double)randomNum);
+        randomNum = rand.nextInt((10 - 1) + 1) + 1;
+        dy = (int)Math.pow(-1.0, (double)randomNum);
 
         this.vectorPosition.setY(height);
         resetBitmap(res, numFrames);
