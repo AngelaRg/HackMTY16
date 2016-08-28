@@ -8,17 +8,19 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.WindowManager;
 
 import java.util.Vector;
 
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 {
-    public static final int WIDTH = 856;
-    public static final int HEIGHT = 480;
+    public static int WIDTH = 856;
+    public static int HEIGHT = 480;
     private MainThread thread;
     private Background bg;
     public Player player;
@@ -31,6 +33,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         getHolder().addCallback(this);
         //make gamePanel focusable so it can handle events
         setFocusable(true);
+
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        HEIGHT = display.getHeight();
+        WIDTH = display.getWidth();
     }
 
     @Override
@@ -54,7 +61,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceCreated(SurfaceHolder holder){
-        Bitmap bgBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.graveyard1);
+        Bitmap bgBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.graveyard);
         bg = new Background(bgBitmap);
 
         Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.magician);
