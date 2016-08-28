@@ -12,15 +12,19 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.ArrayList;
+
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 {
     public static final int WIDTH = 856;
     public static final int HEIGHT = 480;
+    public static final int NUM_ENEMIES = 3;
     private MainThread thread;
     private Background bg;
     public Player player;
     private Enemy enemy;
+    private ArrayList<Enemy> enemies;
 
     public GamePanel(Context context) {
         super(context);
@@ -57,8 +61,13 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.magician);
         player = new Player(playerBitmap, playerBitmap.getWidth()/4, playerBitmap.getHeight(), 4);
 
-        Bitmap enemyBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ghost);
-        enemy = new Enemy(enemyBitmap, enemyBitmap.getWidth()/3, enemyBitmap.getHeight(), 3);
+        enemies = new ArrayList<Enemy>();
+        for (int i=0; i < NUM_ENEMIES; i++) {
+            Bitmap enemyBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ghost);
+            enemy = new Enemy(enemyBitmap, enemyBitmap.getWidth()/3, enemyBitmap.getHeight(), 3);
+            enemies.add(enemy);
+        }
+
 
         thread = new MainThread(getHolder(), this);
         //we can safely start the game loop
@@ -75,7 +84,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         if(player.getPlaying()) {
             bg.update();
             player.update();
-            enemy.update();
+            for (Enemy en: enemies){
+                en.update();
+            }
         }
 
     }
@@ -101,7 +112,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
             canvas.scale(scaleFactorX, scaleFactorY);
             bg.draw(canvas);
             player.draw(canvas);
-            enemy.draw(canvas);
+            for (Enemy en: enemies){
+                en.draw(canvas);
+            }
             canvas.restoreToCount(savedState);
 
         }
