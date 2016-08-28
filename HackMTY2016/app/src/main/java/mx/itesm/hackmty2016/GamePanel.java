@@ -26,12 +26,15 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     public static int WIDTH = 856;
     public static int HEIGHT = 480;
     public static final int NUM_ENEMIES = 6;
+    public static final int NUM_HEARTS = 2;
 
     private MainThread thread;
     private Background bg;
     public Player player;
     private Enemy enemy;
     private ArrayList<Enemy> enemies;
+    private Heart heart;
+    private ArrayList<Heart> hearts;
     private Vector<Projectile> shots = new Vector<>();
 
     public GamePanel(Context context) {
@@ -48,6 +51,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         final MediaPlayer mp = MediaPlayer.create(context, R.raw.scarymusic);
         mp.setLooping(true);
         mp.start();
+
     }
 
     @Override
@@ -84,6 +88,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
             enemies.add(enemy);
         }
 
+        hearts = new ArrayList<Heart>();
+        for (int i = 1; i <= NUM_HEARTS; i++ ) {
+            Bitmap heartBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.heart);
+            heart = new Heart(heartBitmap, heartBitmap.getWidth(), heartBitmap.getHeight(), 1, i*100);
+            hearts.add(heart);
+        }
 
         thread = new MainThread(getHolder(), this);
         //we can safely start the game loop
@@ -141,6 +151,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
             player.draw(canvas);
             for (Enemy en: enemies){
                 en.draw(canvas);
+            }
+            for (Heart ha: hearts){
+                ha.draw(canvas);
             }
             canvas.restoreToCount(savedState);
 
