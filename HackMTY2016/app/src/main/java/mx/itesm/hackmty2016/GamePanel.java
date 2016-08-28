@@ -8,23 +8,29 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.WindowManager;
+
+import java.util.Vector;
 
 import java.util.ArrayList;
 
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 {
-    public static final int WIDTH = 856;
-    public static final int HEIGHT = 480;
+    public static int WIDTH = 856;
+    public static int HEIGHT = 480;
     public static final int NUM_ENEMIES = 3;
+
     private MainThread thread;
     private Background bg;
     public Player player;
     private Enemy enemy;
     private ArrayList<Enemy> enemies;
+    private Vector<Projectile> shots = new Vector<>();
 
     public GamePanel(Context context) {
         super(context);
@@ -32,6 +38,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         getHolder().addCallback(this);
         //make gamePanel focusable so it can handle events
         setFocusable(true);
+
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        HEIGHT = display.getHeight();
+        WIDTH = display.getWidth();
     }
 
     @Override
@@ -55,7 +66,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceCreated(SurfaceHolder holder){
-        Bitmap bgBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.graveyard1);
+        Bitmap bgBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.graveyard);
         bg = new Background(bgBitmap);
 
         Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.magician);
@@ -77,6 +88,17 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+
+        float touchX = event.getX();
+        float touchY = event.getY();
+        float playerX = player.getVectorPosition().getX();
+        float playerY = player.getVectorPosition().getY();
+
+        float slope = (touchY - playerY)/(touchX - playerX);
+        Bitmap missile = BitmapFactory.decodeResource(getResources(), R.drawable.missile);
+        Projectile shot = new Projectile(missile, 50, 50, slope, 13, playerX+slope, playerY+slope);
+        shots.addElement(shot);
+
         return super.onTouchEvent(event);
     }
 
