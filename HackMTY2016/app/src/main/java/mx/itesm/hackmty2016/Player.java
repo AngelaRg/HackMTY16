@@ -24,33 +24,35 @@ public class Player extends GameObject{
         height = h;
         width = w;
         this.vectorPosition.setY(GamePanel.HEIGHT - height);
-
-        Bitmap[] image = new Bitmap[numFrames];
-        spritesheet = res;
-
-        for (int i = 0; i < image.length; i++)
-        {
-            image[i] = Bitmap.createBitmap(spritesheet, i*width, 0, width, height);
-        }
-
-        animation.setFrames(image);
-        animation.setDelay(80);
+        resetBitmap(res,numFrames);
         startTime = System.nanoTime();
     }
 
-    public void update()
-    {
+    public void resetBitmap(Bitmap res, int numFrames){
+        Bitmap[] image = new Bitmap[numFrames];
+        spritesheet = res;
+        for (int i = 0; i < image.length; i++) {
+            image[i] = Bitmap.createBitmap(spritesheet, i*width, 0, width, height);
+        }
+        animation.setFrames(image);
+        animation.setDelay(80);
+    }
+
+    public void update() {
         long elapsed = (System.nanoTime()-startTime)/1000000;
-        if(elapsed>100)
-        {
+        if(elapsed>100) {
             score++;
             startTime = System.nanoTime();
         }
         animation.update();
     }
 
-    public void draw(Canvas canvas)
-    {
+    public void movePlayer(int mov){
+        // actualizar la posicion
+        this.vectorPosition.setX(this.vectorPosition.getX() + mov);
+    }
+
+    public void draw(Canvas canvas) {
         canvas.drawBitmap(animation.getImage(), this.vectorPosition.getX(),  this.vectorPosition.getY(),null);
     }
     public int getScore(){return score;}
