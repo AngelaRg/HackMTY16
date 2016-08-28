@@ -19,7 +19,7 @@ public class MiniMissile extends GameObject {
         height = h;
         width = w;
 
-        this.vectorPosition.setY(height);
+        this.vectorPosition.setY(height * 2);
         resetBitmap(res, numFrames);
     }
 

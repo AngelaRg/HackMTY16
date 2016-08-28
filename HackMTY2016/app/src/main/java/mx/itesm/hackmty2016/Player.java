@@ -17,7 +17,7 @@ public class Player extends GameObject{
     private int lifes;
 
     public Player(Bitmap res, int w, int h, int numFrames) {
-        this.playing = true;
+        this.playing = false;
         this.vectorPosition = new Vector2D();
         this.vectorPosition.setX(100);
         score = 0;

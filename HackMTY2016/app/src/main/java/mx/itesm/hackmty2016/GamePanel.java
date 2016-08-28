@@ -41,6 +41,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     private ArrayList<MiniMissile> missileCount;
 
     private boolean gameOver;
+    private boolean beforeStart;
 
     public GamePanel(Context context) {
         super(context);
@@ -58,6 +59,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         mp.start();
 
         gameOver = false;
+        beforeStart = true;
     }
 
     @Override
@@ -118,7 +120,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        if(gameOver){
+        if (beforeStart){
+            player.setPlaying(true);
+            beforeStart = false;
+        } else if(gameOver){
             resetGame();
         } else if(shots.size() < NUM_MISSILES) {
             float touchX = event.getX();
@@ -189,21 +194,24 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     }
 
     public void checkColision(){
-        for (Enemy en: enemies){
-            if (collision(en,player)){
-                enemies.remove(en);
-                // agregar nuevo enemigo
-                Bitmap enemyBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ghost);
-                enemy = new Enemy(enemyBitmap, enemyBitmap.getWidth()/3, enemyBitmap.getHeight(), 3);
-                enemies.add(enemy);
+        if (player.getPlaying()){
+            for (Enemy en: enemies){
+                if (collision(en,player)){
+                    enemies.remove(en);
+                    // agregar nuevo enemigo
+                    Bitmap enemyBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ghost);
+                    enemy = new Enemy(enemyBitmap, enemyBitmap.getWidth()/3, enemyBitmap.getHeight(), 3);
+                    enemies.add(enemy);
 
-                player.setLifes(player.getLifes() - 1);
-                hearts.remove(hearts.size()-1);
-                if (player.getLifes() == 0){
-                    endGame();
+                    player.setLifes(player.getLifes() - 1);
+                    hearts.remove(hearts.size()-1);
+                    if (player.getLifes() == 0){
+                        endGame();
+                    }
                 }
             }
         }
+
     }
 
     public void endGame(){
@@ -257,24 +265,30 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
             final int savedState = canvas.save();
             canvas.scale(scaleFactorX, scaleFactorY);
             bg.draw(canvas);
-            player.draw(canvas);
-            for (Enemy en: enemies){
-                en.draw(canvas);
-            }
-            for (Heart ha: hearts) {
-                ha.draw(canvas);
-            }
-            for (Projectile shot: shots){
-                shot.draw(canvas);
-            }
-            if(!missileCount.isEmpty()) {
-                for (MiniMissile mm : missileCount) {
-                    mm.draw(canvas);
+            if(player.getPlaying()) {
+                player.draw(canvas);
+                for (Enemy en: enemies){
+                    en.draw(canvas);
                 }
+                for (Heart ha: hearts) {
+                    ha.draw(canvas);
+                }
+                for (Projectile shot: shots){
+                    shot.draw(canvas);
+                }
+                if(!missileCount.isEmpty()) {
+                    for (MiniMissile mm : missileCount) {
+                        mm.draw(canvas);
+                    }
+                }
+            }
+            if (beforeStart){
+                Bitmap menuBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.menu2);
+                canvas.drawBitmap(menuBitmap, WIDTH / 4 - menuBitmap.getWidth() / 8, 0, null);
             }
             if(gameOver){
                 Bitmap goBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.gameover2);
-                canvas.drawBitmap(goBitmap, WIDTH/4 - goBitmap.getWidth()/8, 0, null);
+                canvas.drawBitmap(goBitmap, WIDTH / 4 - goBitmap.getWidth() / 8, 0, null);
             }
             canvas.restoreToCount(savedState);
 
