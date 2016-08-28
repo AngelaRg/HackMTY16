@@ -17,12 +17,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
-
 import java.util.ArrayList;
-import java.util.Vector;
 
-import java.util.ArrayList;
 
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
@@ -45,6 +41,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
     private boolean gameOver;
     private boolean beforeStart;
+    private Context context;
+    private MediaPlayer mp;
 
     public GamePanel(Context context) {
         super(context);
@@ -53,13 +51,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         //make gamePanel focusable so it can handle events
         setFocusable(true);
 
+        this.context = context;
+
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         HEIGHT = display.getHeight();
         WIDTH = display.getWidth();
-        final MediaPlayer mp = MediaPlayer.create(context, R.raw.scarymusic);
-        mp.setLooping(true);
-        mp.start();
 
         gameOver = false;
         beforeStart = true;
@@ -82,10 +79,17 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
             }catch(InterruptedException e){e.printStackTrace();}
         }
+
+        mp.stop();
+        mp.release();
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder){
+        mp = MediaPlayer.create(this.context, R.raw.scarymusic);
+        mp.setLooping(true);
+        mp.start();
+
         Bitmap bgBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.graveyard);
         bg = new Background(bgBitmap);
 
@@ -269,6 +273,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
             final int savedState = canvas.save();
             canvas.scale(scaleFactorX, scaleFactorY);
             bg.draw(canvas);
+            drawText(canvas);
             if(player.getPlaying()) {
                 player.draw(canvas);
                 for (Enemy en: enemies){
@@ -285,7 +290,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
                         mm.draw(canvas);
                     }
                 }
-                drawText(canvas);
             }
             if (beforeStart){
                 Bitmap menuBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.menu2);

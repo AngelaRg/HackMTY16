@@ -1,17 +1,15 @@
 package mx.itesm.hackmty2016;
 
 import android.content.pm.ActivityInfo;
-import android.graphics.BitmapFactory;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.support.v7.app.AppCompatActivity;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 
 
 import android.app.Activity;
-        import android.os.Bundle;
         import android.view.Menu;
         import android.view.MenuItem;
         import android.view.Window;
