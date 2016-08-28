@@ -92,7 +92,8 @@ public class MainActivity extends Activity implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (this.gamePanel.player !=null){
-            this.gamePanel.player.setX(this.gamePanel.player.getX() + (int)event.values[1]);
+            this.gamePanel.player.vectorPosition.setX(this.gamePanel.player.vectorPosition.getX()
+                    + (int)event.values[1]);
         }
     }
 

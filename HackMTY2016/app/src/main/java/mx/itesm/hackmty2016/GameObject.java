@@ -6,29 +6,22 @@ package mx.itesm.hackmty2016;
 import android.graphics.Rect;
 
 public abstract class GameObject {
-    protected int x;
-    protected int y;
+    //protected int x;
+    //protected int y;
+    protected Vector2D vectorPosition;
     protected int dy;
     protected int dx;
     protected int width;
     protected int height;
 
-    public void setX(int x)
-    {
-        this.x = x;
+    public Vector2D getVectorPosition() {
+        return vectorPosition;
     }
-    public void setY(int y)
-    {
-        this.y = y;
+
+    public void setVectorPosition(Vector2D vectorPosition) {
+        this.vectorPosition = vectorPosition;
     }
-    public int getX()
-    {
-        return x;
-    }
-    public int getY()
-    {
-        return y;
-    }
+
     public int getHeight()
     {
         return height;
@@ -39,7 +32,8 @@ public abstract class GameObject {
     }
     public Rect getRectangle()
     {
-        return new Rect(x, y, x+width, y+height);
+        return new Rect((int)this.vectorPosition.getX(), (int)this.vectorPosition.getY(),
+                (int)this.vectorPosition.getX()+width, (int)this.vectorPosition.getY()+height);
     }
 
 }

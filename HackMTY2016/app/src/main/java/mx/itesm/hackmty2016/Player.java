@@ -11,16 +11,14 @@ import android.graphics.Bitmap;
 public class Player extends GameObject{
     private Bitmap spritesheet;
     private int score;
-
-    private boolean up;
     private boolean playing;
     private Animation animation = new Animation();
     private long startTime;
 
     public Player(Bitmap res, int w, int h, int numFrames) {
-
-        x = 100;
-        y = GamePanel.HEIGHT / 2;
+        this.vectorPosition = new Vector2D();
+        this.vectorPosition.setX(100);
+        this.vectorPosition.setY(  GamePanel.HEIGHT / 2);
         dy = 0;
         score = 0;
         height = h;
@@ -52,7 +50,7 @@ public class Player extends GameObject{
 
     public void draw(Canvas canvas)
     {
-        canvas.drawBitmap(animation.getImage(),x,y,null);
+        canvas.drawBitmap(animation.getImage(), this.vectorPosition.getX(),  this.vectorPosition.getY(),null);
     }
     public int getScore(){return score;}
     public boolean getPlaying(){return playing;}
