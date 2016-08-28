@@ -16,7 +16,7 @@ public class Enemy extends GameObject{
     public Enemy(Bitmap res, int w, int h, int numFrames){
         this.vectorPosition = new Vector2D();
         Random rand = new Random();
-        int randomNum = rand.nextInt((GamePanel.WIDTH - 1) + 1) + 1;
+        int randomNum = rand.nextInt(((GamePanel.WIDTH-w) - 1) + 1) + 1;
         this.vectorPosition.setX(randomNum);
 
         height = h;
