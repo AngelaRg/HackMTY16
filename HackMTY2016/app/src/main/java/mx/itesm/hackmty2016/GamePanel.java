@@ -4,6 +4,7 @@ package mx.itesm.hackmty2016;
  * Created by Angela on 27/08/2016.
  */
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -35,8 +36,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         setFocusable(true);
     }
 
-
-
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height){}
 
@@ -53,23 +52,23 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
                 thread = null;
 
             }catch(InterruptedException e){e.printStackTrace();}
-
         }
-
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder){
+        Bitmap bgBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.graveyard1);
+        bg = new Background(bgBitmap);
 
-        bg = new Background(BitmapFactory.decodeResource(getResources(), R.drawable.grassbg1));
-        player = new Player(BitmapFactory.decodeResource(getResources(), R.drawable.helicopter), 65, 25, 3);
+        Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.wizard_right1);
+        player = new Player(playerBitmap, playerBitmap.getWidth()/4, playerBitmap.getHeight(), 4);
 
         thread = new MainThread(getHolder(), this);
         //we can safely start the game loop
         thread.setRunning(true);
         thread.start();
-
     }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         return super.onTouchEvent(event);
@@ -77,10 +76,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
     public void update() {
         if(player.getPlaying()) {
-
             bg.update();
             player.update();
-
         }
 
     }

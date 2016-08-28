@@ -16,13 +16,14 @@ public class Player extends GameObject{
     private long startTime;
 
     public Player(Bitmap res, int w, int h, int numFrames) {
+        this.playing = true;
         this.vectorPosition = new Vector2D();
         this.vectorPosition.setX(100);
-        this.vectorPosition.setY(  GamePanel.HEIGHT / 2);
         dy = 0;
         score = 0;
         height = h;
         width = w;
+        this.vectorPosition.setY(GamePanel.HEIGHT - height);
 
         Bitmap[] image = new Bitmap[numFrames];
         spritesheet = res;
@@ -33,7 +34,7 @@ public class Player extends GameObject{
         }
 
         animation.setFrames(image);
-        animation.setDelay(10);
+        animation.setDelay(80);
         startTime = System.nanoTime();
     }
 
