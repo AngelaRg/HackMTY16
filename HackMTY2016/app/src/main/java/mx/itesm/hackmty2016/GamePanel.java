@@ -7,7 +7,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -164,6 +167,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
                 for(Projectile shot: shots) {
                     if(collision(en, shot)) {
+                        player.setScore(player.getScore() + 15);
                         shots.remove(shot);
                         enemies.remove(en);
                         missileCount.add(mm);
@@ -281,6 +285,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
                         mm.draw(canvas);
                     }
                 }
+                drawText(canvas);
             }
             if (beforeStart){
                 Bitmap menuBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.menu2);
@@ -295,6 +300,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         }
     }
 
-
+    public void drawText(Canvas canvas) {
+        Paint paint = new Paint();
+        paint.setColor(Color.WHITE);
+        paint.setTextSize(60);
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+        canvas.drawText("SCORE: " + (player.getScore()), 10, 40, paint);
+    }
 
 }

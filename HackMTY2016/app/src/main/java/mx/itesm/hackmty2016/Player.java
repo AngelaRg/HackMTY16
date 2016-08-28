@@ -42,7 +42,7 @@ public class Player extends GameObject{
     public void update() {
         long elapsed = (System.nanoTime()-startTime)/1000000;
         if(elapsed>100) {
-            score++;
+            //score++;
             startTime = System.nanoTime();
         }
         animation.update();
@@ -62,6 +62,7 @@ public class Player extends GameObject{
         canvas.drawBitmap(animation.getImage(), this.vectorPosition.getX(),  this.vectorPosition.getY(),null);
     }
     public int getScore(){return score;}
+    public void setScore(int score) {this.score = score;}
     public boolean getPlaying(){return playing;}
     public void setPlaying(boolean b){playing = b;}
     public void resetScore(){score = 0;}
