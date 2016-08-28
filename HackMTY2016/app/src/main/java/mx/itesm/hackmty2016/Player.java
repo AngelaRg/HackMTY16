@@ -14,17 +14,18 @@ public class Player extends GameObject{
     private boolean playing;
     private Animation animation = new Animation();
     private long startTime;
+    private int lifes;
 
     public Player(Bitmap res, int w, int h, int numFrames) {
         this.playing = true;
         this.vectorPosition = new Vector2D();
         this.vectorPosition.setX(100);
-        dy = 0;
         score = 0;
+        lifes = 0;
         height = h;
         width = w;
         this.vectorPosition.setY(GamePanel.HEIGHT - height);
-        resetBitmap(res,numFrames);
+        resetBitmap(res, numFrames);
         startTime = System.nanoTime();
     }
 
@@ -49,7 +50,10 @@ public class Player extends GameObject{
 
     public void movePlayer(int mov){
         // actualizar la posicion
-        this.vectorPosition.setX(this.vectorPosition.getX() + mov);
+        float pos = this.vectorPosition.getX() + mov;
+        if((pos + width < GamePanel.WIDTH) &&  (pos > 0)){
+            this.vectorPosition.setX(pos);
+        }
     }
 
     public void draw(Canvas canvas) {

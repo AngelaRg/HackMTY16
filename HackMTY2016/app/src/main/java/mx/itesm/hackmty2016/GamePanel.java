@@ -25,7 +25,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 {
     public static int WIDTH = 856;
     public static int HEIGHT = 480;
-    public static final int NUM_ENEMIES = 3;
+    public static final int NUM_ENEMIES = 6;
 
     private MainThread thread;
     private Background bg;
