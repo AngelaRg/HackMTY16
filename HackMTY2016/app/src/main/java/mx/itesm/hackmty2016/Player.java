@@ -37,10 +37,7 @@ public class Player extends GameObject{
         animation.setFrames(image);
         animation.setDelay(10);
         startTime = System.nanoTime();
-
     }
-
-    public void setUp(boolean b){up = b;}
 
     public void update()
     {
@@ -51,20 +48,6 @@ public class Player extends GameObject{
             startTime = System.nanoTime();
         }
         animation.update();
-
-        if(up){
-            dy -=1;
-
-        }
-        else{
-            dy +=1;
-        }
-
-        if(dy>14)dy = 14;
-        if(dy<-14)dy = -14;
-
-        y += dy*2;
-
     }
 
     public void draw(Canvas canvas)
@@ -74,6 +57,5 @@ public class Player extends GameObject{
     public int getScore(){return score;}
     public boolean getPlaying(){return playing;}
     public void setPlaying(boolean b){playing = b;}
-    public void resetDY(){dy = 0;}
     public void resetScore(){score = 0;}
 }
