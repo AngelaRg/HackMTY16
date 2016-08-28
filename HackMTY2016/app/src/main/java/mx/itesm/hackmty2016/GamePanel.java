@@ -118,8 +118,18 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
             player.update();
             for (Enemy en: enemies){
                 en.update();
+
+                for(Projectile shot: shots) {
+                    if(collision(en, shot)) {
+                        shots.remove(shot);
+                        enemies.remove(en);
+                        Bitmap enemyBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ghost);
+                        enemy = new Enemy(enemyBitmap, enemyBitmap.getWidth()/3, enemyBitmap.getHeight(), 3);
+                        enemies.add(enemy);
+                    }
+                }
             }
-            for (Projectile shot: shots){
+            for (Projectile shot: shots) {
                 shot.update();
                 float x = shot.getVectorPosition().getX();
                 float y = shot.getVectorPosition().getY();
