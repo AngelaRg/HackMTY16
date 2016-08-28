@@ -21,7 +21,7 @@ public class Player extends GameObject{
         this.vectorPosition = new Vector2D();
         this.vectorPosition.setX(100);
         score = 0;
-        lifes = 0;
+        lifes = 2;
         height = h;
         width = w;
         this.vectorPosition.setY(GamePanel.HEIGHT - height);
@@ -49,10 +49,12 @@ public class Player extends GameObject{
     }
 
     public void movePlayer(int mov){
-        // actualizar la posicion
-        float pos = this.vectorPosition.getX() + mov;
-        if((pos + width < GamePanel.WIDTH) &&  (pos > 0)){
-            this.vectorPosition.setX(pos);
+        if (this.playing){
+            // actualizar la posicion
+            float pos = this.vectorPosition.getX() + mov;
+            if((pos + width < GamePanel.WIDTH) &&  (pos > 0)){
+                this.vectorPosition.setX(pos);
+            }
         }
     }
 
@@ -63,4 +65,12 @@ public class Player extends GameObject{
     public boolean getPlaying(){return playing;}
     public void setPlaying(boolean b){playing = b;}
     public void resetScore(){score = 0;}
+
+    public int getLifes() {
+        return lifes;
+    }
+
+    public void setLifes(int lifes) {
+        this.lifes = lifes;
+    }
 }

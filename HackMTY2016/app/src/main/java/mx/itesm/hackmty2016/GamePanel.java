@@ -118,6 +118,23 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
     }
 
+    public void checkColision(){
+        for (Enemy en: enemies){
+            if (collision(en,player)){
+                enemies.remove(en);
+                player.setLifes(player.getLifes() - 1);
+                if (player.getLifes() == 0){
+                    endGame();
+                }
+            }
+        }
+    }
+
+    public void endGame(){
+        enemies.clear();
+        player.setPlaying(false);
+    }
+
     public boolean collision(GameObject a, GameObject b)
     {
         if(Rect.intersects(a.getRectangle(), b.getRectangle()))

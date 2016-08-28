@@ -41,6 +41,7 @@ public class MainThread extends Thread
                 canvas = this.surfaceHolder.lockCanvas();
                 synchronized (surfaceHolder) {
                     this.gamePanel.update();
+                    this.gamePanel.checkColision();
                     this.gamePanel.draw(canvas);
                 }
             } catch (Exception e) {
