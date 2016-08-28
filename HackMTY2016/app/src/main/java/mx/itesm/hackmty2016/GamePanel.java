@@ -12,6 +12,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.Vector;
+
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 {
@@ -21,6 +23,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     private Background bg;
     public Player player;
     private Enemy enemy;
+    private Vector<Projectile> shots = new Vector<>();
 
     public GamePanel(Context context) {
         super(context);
@@ -77,7 +80,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         float slope = (touchY - playerY)/(touchX - playerX);
         Bitmap missile = BitmapFactory.decodeResource(getResources(), R.drawable.missile);
         Projectile shot = new Projectile(missile, 50, 50, slope, 13, playerX+slope, playerY+slope);
-
+        shots.addElement(shot);
 
         return super.onTouchEvent(event);
     }
