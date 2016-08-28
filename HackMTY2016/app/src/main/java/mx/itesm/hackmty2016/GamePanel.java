@@ -71,6 +71,17 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+
+        float touchX = event.getX();
+        float touchY = event.getY();
+        float playerX = player.getVectorPosition().getX();
+        float playerY = player.getVectorPosition().getY();
+
+        float slope = (touchY - playerY)/(touchX - playerX);
+        Bitmap missile = BitmapFactory.decodeResource(getResources(), R.drawable.missile);
+        Projectile shot = new Projectile(missile, 50, 50, slope, 13, playerX+slope, playerY+slope);
+
+
         return super.onTouchEvent(event);
     }
 
