@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -24,7 +25,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 {
     public static int WIDTH = 856;
     public static int HEIGHT = 480;
-    public static final int NUM_ENEMIES = 3;
+    public static final int NUM_ENEMIES = 6;
 
     private MainThread thread;
     private Background bg;
@@ -44,6 +45,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         Display display = wm.getDefaultDisplay();
         HEIGHT = display.getHeight();
         WIDTH = display.getWidth();
+        final MediaPlayer mp = MediaPlayer.create(context, R.raw.scarymusic);
+        mp.setLooping(true);
+        mp.start();
     }
 
     @Override
@@ -131,6 +135,23 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
             }
         }
 
+    }
+
+    public void checkColision(){
+        for (Enemy en: enemies){
+            if (collision(en,player)){
+                enemies.remove(en);
+                player.setLifes(player.getLifes() - 1);
+                if (player.getLifes() == 0){
+                    endGame();
+                }
+            }
+        }
+    }
+
+    public void endGame(){
+        enemies.clear();
+        player.setPlaying(false);
     }
 
     public boolean collision(GameObject a, GameObject b)

@@ -22,7 +22,7 @@ public class Enemy extends GameObject{
         height = h;
         width = w;
 
-        randomNum = rand.nextInt((5 - 2) + 1) + 2;
+        randomNum = rand.nextInt((10 - 2) + 1) + 2;
         speed = randomNum;
 
         // direccion en x,y
