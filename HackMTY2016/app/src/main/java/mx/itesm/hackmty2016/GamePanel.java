@@ -168,6 +168,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         for (Enemy en: enemies){
             if (collision(en,player)){
                 enemies.remove(en);
+                // agregar nuevo enemigo
+                Bitmap enemyBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ghost);
+                enemy = new Enemy(enemyBitmap, enemyBitmap.getWidth()/3, enemyBitmap.getHeight(), 3);
+                enemies.add(enemy);
+
                 player.setLifes(player.getLifes() - 1);
                 hearts.remove(hearts.size()-1);
                 if (player.getLifes() == 0){
@@ -240,7 +245,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
             }
             if(gameOver){
                 Bitmap goBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.gameover2);
-                canvas.drawBitmap(goBitmap, 0, 0, null);
+                canvas.drawBitmap(goBitmap, WIDTH/4 - goBitmap.getWidth()/8, 0, null);
             }
             canvas.restoreToCount(savedState);
 
