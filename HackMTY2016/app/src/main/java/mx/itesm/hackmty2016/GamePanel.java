@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -44,6 +45,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         Display display = wm.getDefaultDisplay();
         HEIGHT = display.getHeight();
         WIDTH = display.getWidth();
+        final MediaPlayer mp = MediaPlayer.create(context, R.raw.scarymusic);
+        mp.setLooping(true);
+        mp.start();
     }
 
     @Override
