@@ -35,7 +35,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     private ArrayList<Enemy> enemies;
     private Heart heart;
     private ArrayList<Heart> hearts;
-    private Vector<Projectile> shots = new Vector<>();
+    private ArrayList<Projectile> shots;
 
     public GamePanel(Context context) {
         super(context);
@@ -82,6 +82,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
         player = new Player(playerBitmap, playerBitmap.getWidth()/4, playerBitmap.getHeight(), 4);
 
         enemies = new ArrayList<Enemy>();
+        shots = new ArrayList<>();
         for (int i=0; i < NUM_ENEMIES; i++) {
             Bitmap enemyBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ghost);
             enemy = new Enemy(enemyBitmap, enemyBitmap.getWidth()/3, enemyBitmap.getHeight(), 3);
@@ -104,15 +105,19 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        float touchX = event.getX();
-        float touchY = event.getY();
-        float playerX = player.getVectorPosition().getX();
-        float playerY = player.getVectorPosition().getY();
+        if(shots.size() <= 3) {
+            float touchX = event.getX();
+            float touchY = event.getY();
+            float playerX = player.getVectorPosition().getX();
+            float playerY = player.getVectorPosition().getY();
 
-        float slope = (touchY - playerY)/(touchX - playerX);
-        Bitmap missile = BitmapFactory.decodeResource(getResources(), R.drawable.missile);
-        Projectile shot = new Projectile(missile, 50, 50, slope, 13, playerX+slope, playerY+slope);
-        shots.add(shot);
+            float vel = (float)Math.sqrt(Math.pow((touchX - playerX),2) + Math.pow((touchY - playerY), 2));
+
+            float slope = (touchY - playerY)/(touchX - playerX);
+            Bitmap missile = BitmapFactory.decodeResource(getResources(), R.drawable.magic2);
+            Projectile shot = new Projectile(missile, missile.getWidth()/3, missile.getHeight(), slope, 3, playerX, playerY, vel);
+            shots.add(shot);
+        }
 
         return super.onTouchEvent(event);
     }
@@ -123,9 +128,50 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
             player.update();
             for (Enemy en: enemies){
                 en.update();
+
+                for(Projectile shot: shots) {
+                    if(collision(en, shot)) {
+                        shots.remove(shot);
+                        enemies.remove(en);
+                        Bitmap enemyBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ghost);
+                        enemy = new Enemy(enemyBitmap, enemyBitmap.getWidth()/3, enemyBitmap.getHeight(), 3);
+                        enemies.add(enemy);
+                    }
+                }
+            }
+            for (Projectile shot: shots) {
+                shot.update();
+                float x = shot.getVectorPosition().getX();
+                float y = shot.getVectorPosition().getY();
+
+                if(x<0 || x>WIDTH) {
+                    shots.remove(shot);
+                } else {
+                    if (y<0 || y>HEIGHT) {
+                        shots.remove(shot);
+                    }
+                }
+
             }
         }
 
+    }
+
+    public void checkColision(){
+        for (Enemy en: enemies){
+            if (collision(en,player)){
+                enemies.remove(en);
+                player.setLifes(player.getLifes() - 1);
+                if (player.getLifes() == 0){
+                    endGame();
+                }
+            }
+        }
+    }
+
+    public void endGame(){
+        enemies.clear();
+        player.setPlaying(false);
     }
 
     public boolean collision(GameObject a, GameObject b)
@@ -152,8 +198,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
             for (Enemy en: enemies){
                 en.draw(canvas);
             }
-            for (Heart ha: hearts){
+            for (Heart ha: hearts) {
                 ha.draw(canvas);
+            }
+            for (Projectile shot: shots){
+                shot.draw(canvas);
             }
             canvas.restoreToCount(savedState);
 
